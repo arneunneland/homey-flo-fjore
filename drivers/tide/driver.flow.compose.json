@@ -1,0 +1,46 @@
+{
+  "triggers": [
+    {
+      "id": "whenTideHighest",
+      "title": {
+        "en": "The tide is highest",
+        "no": "Floa er høyest"
+      }
+    },    {
+      "id": "whenTideLowest",
+      "title": {
+        "en": "The tide is lowest",
+        "no": "Fjæra er lavest"
+      }
+    }
+  ],"conditions": [
+    {
+      "id": "isTideHigh",
+      "title": {
+        "en": "Tide is high",
+        "no": "Det er flo"
+      }
+    },
+    {
+      "id": "isTideLow",
+      "title": {
+        "en": "The tide is low",
+        "no": "Det er fjære"
+      }
+    },
+    {
+      "id": "isTideRising",
+      "title": {
+        "en": "The tide is rising",
+        "no": "Tidevannet stiger"
+      }
+    },
+    {
+      "id": "isTideFalling",
+      "title": {
+        "en": "The tide is falling",
+        "no": "Tidevannet synker"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[
+    {
+        "id": "longitude",
+        "type": "text",
+        "label": { "en": "Longitude" },
+        "value": "",
+        "hint": { "en": "Longitude of the position" }
+    },
+    {
+        "id": "latitude",
+        "type": "text",
+        "label": { "en": "Latitude" },
+        "value": "",
+        "hint": { "en": "Longitude of the position" }
+    }
+]

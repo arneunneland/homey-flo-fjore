@@ -1,0 +1,9 @@
+{
+    "type": "string",
+    "title": { "en": "Next tide", "no": "På vei mot" },
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "uiQuickAction": false,
+    "icon": "/assets/icon.svg"
+  }

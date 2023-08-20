@@ -1,0 +1,43 @@
+{
+  "name": {
+    "en": "Norwegian tide",
+    "no": "Flo og fjære"
+  },
+  "class": "other",
+  "capabilities": ["tideLevel", "tideChangeShort", "tideChangeLong", "tideNextType", "tideNextTime"],
+  "capabilitiesOptions": {
+    "tideLevel": { "decimals": 1, "units": "cm" },
+    "tideChangeShort": { "decimals": 2, "units": "cm" },
+    "tideChangeLong": { "decimals": 2, "units": "cm" },
+    "tideNextLevel": { "decimals": 2, "units": "cm" }
+  },
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_my_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_my_devices"
+      }
+    },
+    {
+      "id": "add_my_devices",
+      "template": "add_devices",
+      "navigation": {
+        "next": "done"
+      }
+    },
+    {
+      "id": "done",
+      "template": "done"
+    }
+  ]
+}

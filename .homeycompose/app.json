@@ -1,0 +1,33 @@
+{
+  "id": "com.unneland.flofjore",
+  "version": "0.9.3",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Norwegian tide levels",
+    "no": "Flo og Fjære"
+  },
+  "description": {
+    "en": "Adds Norwegian tide levels. Data from Norwegian Mapping Authority",
+    "no": "Git tilgang til data om tidevann. Data hentes fra Kartverket"
+  },
+  "category": [
+    "climate"
+  ],
+  "permissions": [
+    "homey:manager:geolocation"
+  ],
+  "brandColor": "#0066ff",
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Arne Unneland",
+    "email": "arne.unneland@gmail.com"
+  }
+}

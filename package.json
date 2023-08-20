@@ -1,0 +1,22 @@
+{
+  "name": "com.unneland.flofjore",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts --ignore-path .gitignore ."
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^16.1.0",
+    "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.4",
+    "@types/node": "^20.4.2",
+    "eslint": "^7.32.0",
+    "eslint-config-athom": "^3.1.1"
+  },
+  "dependencies": {
+    "everpolate": "^0.0.3",
+    "gitignore": "^0.7.0",
+    "xml-js": "^1.6.11",
+    "xmldom": "^0.6.0",
+    "xpath": "^0.0.33"
+  }
+}
