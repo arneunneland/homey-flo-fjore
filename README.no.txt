@@ -5,3 +5,5 @@ Dette er en første versjon og om interesse og tid samsvarer så kan det være d
 For å få det til å virke legger du til en enhet. Setter du opp en ny enhet så bruker den Homey sin posisjon som standard, men du kan legge inn andre koordinater for lokalt tidevann. Dette gjøre du under avanserte innstillinger på enheten. Du kan pr. i dag kun legge til en enhet.
 
 Data hentes fra Kartverket.
+
+Kildekoden er tilgjengelig her: https://github.com/arneunneland/homey-flo-fjore
