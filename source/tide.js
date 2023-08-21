@@ -29,6 +29,11 @@ class Tide {
     var today = new Date();
 
     var nextTide = null;
+
+    if (!this.allEvents) {
+      this.homey.log('No tide event data available, skipping');
+      return;
+    }
     this.allEvents.forEach((event) => {
       if (!nextTide && event.timestamp > today) {
         if (event.type == 'highest') {
