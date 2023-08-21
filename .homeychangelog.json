@@ -10,5 +10,8 @@
   },
   "0.9.3": {
     "en": "Updated text in appstore"
+  },
+  "0.9.4": {
+    "en": "Fix possible crash and added link to source code"
   }
 }
