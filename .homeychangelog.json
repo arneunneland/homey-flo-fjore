@@ -13,5 +13,8 @@
   },
   "0.9.4": {
     "en": "Fix possible crash and added link to source code"
+  },
+  "0.9.5": {
+    "en": "Temporary workaround for SSL issues in API"
   }
 }
