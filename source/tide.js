@@ -189,7 +189,6 @@ class Tide {
 
 
   updateSealevel() {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";  //not really nice hack because ssl issues in the api
     var from = new Date();
     from.setHours(from.getHours()-2);
 
