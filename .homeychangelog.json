@@ -16,5 +16,8 @@
   },
   "0.9.5": {
     "en": "Temporary workaround for SSL issues in API"
+  },
+  "0.9.6": {
+    "en": "SSH fixed"
   }
 }
