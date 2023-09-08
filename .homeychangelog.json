@@ -19,5 +19,8 @@
   },
   "0.9.6": {
     "en": "SSH fixed"
+  },
+  "0.9.7": {
+    "en": "Better handling error"
   }
 }
