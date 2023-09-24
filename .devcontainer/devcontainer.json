@@ -1,2 +1,5 @@
-{"image":"mcr.microsoft.com/devcontainers/universal:2",
-"postStartCommand": "npm i -g homey"}
+{
+    "build": { "dockerfile": "Dockerfile" },
+  
+    "forwardPorts": [3000]
+  }
