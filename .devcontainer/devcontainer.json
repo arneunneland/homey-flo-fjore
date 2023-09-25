@@ -1,5 +1,14 @@
 {
     "build": { "dockerfile": "Dockerfile" },
   
-    "forwardPorts": [3000]
+	"forwardPorts": [
+		3000
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-docker"
+			]
+		}
+	}
   }
