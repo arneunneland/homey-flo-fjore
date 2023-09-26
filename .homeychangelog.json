@@ -22,5 +22,8 @@
   },
   "0.9.7": {
     "en": "Better handling error"
+  },
+  "0.9.8": {
+    "en": "Bugfix"
   }
 }
