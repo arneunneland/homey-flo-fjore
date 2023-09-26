@@ -13,10 +13,10 @@
     "eslint-config-athom": "^3.1.1"
   },
   "dependencies": {
+    "@xmldom/xmldom": "^0.8.10",
     "everpolate": "^0.0.3",
     "gitignore": "^0.7.0",
     "xml-js": "^1.6.11",
-    "xmldom": "^0.6.0",
     "xpath": "^0.0.33"
   }
 }

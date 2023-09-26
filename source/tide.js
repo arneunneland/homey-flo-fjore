@@ -2,7 +2,7 @@
 
 var https = require('https');
 const xmlJs = require('xml-js');
-var DOMParser = require("xmldom").DOMParser;
+var DOMParser = require("@xmldom/xmldom").DOMParser;
 var xpath = require("xpath");
 const EventEmitter = require('events');
 var polynomial = require('everpolate').polynomial
