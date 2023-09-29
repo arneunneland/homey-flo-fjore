@@ -224,14 +224,18 @@ class Tide {
         chunks.push(Buffer.from(chunk));
       });
       res.on('end', function () {
-        var body = Buffer.concat(chunks).toString('utf8');
-        let doc = new DOMParser().parseFromString(body);
+        try {
+          var body = Buffer.concat(chunks).toString('utf8');
+          let doc = new DOMParser().parseFromString(body);
 
-        var nodes = xpath.select("//waterlevel[@flag='forecast']", doc);
-        const hashMap = nodes.reduce((result, item) => {
-          return { ...result, [ item.getAttribute("time") ] : item.getAttribute("value") };
-        }, {});
-        tideObj.updateTideData(hashMap);
+          var nodes = xpath.select("//waterlevel[@flag='forecast']", doc);
+          const hashMap = nodes.reduce((result, item) => {
+            return { ...result, [ item.getAttribute("time") ] : item.getAttribute("value") };
+          }, {});
+          tideObj.updateTideData(hashMap);
+        } catch (error) {
+          console.log('problem with xml-tide: ' + error);
+        }
       });
     });
     
@@ -257,14 +261,18 @@ class Tide {
         chunks.push(Buffer.from(chunk));
       });
       res.on('end', function () {
-        var body = Buffer.concat(chunks).toString('utf8');
-        let doc = new DOMParser().parseFromString(body);
-
-        var nodes = xpath.select("//waterlevel", doc);
-        const hashMap = nodes.reduce((result, item) => {
-          return { ...result, [ item.getAttribute("time") ] : { "tideLevel": item.getAttribute("value"), "flag": item.getAttribute("flag") } };
-        }, {});
-        tideObj.updateEventData(hashMap);
+        try {
+          var body = Buffer.concat(chunks).toString('utf8');
+          let doc = new DOMParser().parseFromString(body);
+  
+          var nodes = xpath.select("//waterlevel", doc);
+          const hashMap = nodes.reduce((result, item) => {
+            return { ...result, [ item.getAttribute("time") ] : { "tideLevel": item.getAttribute("value"), "flag": item.getAttribute("flag") } };
+          }, {});
+          tideObj.updateEventData(hashMap);
+        } catch (error) {
+          console.log('problem with xml-event: ' + error);
+        }
       });
     });
     
