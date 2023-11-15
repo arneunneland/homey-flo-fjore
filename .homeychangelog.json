@@ -28,5 +28,8 @@
   },
   "0.9.9": {
     "en": "Bugfix"
+  },
+  "0.9.10": {
+    "en": "Better logging when tide is updated"
   }
 }

@@ -1,6 +1,6 @@
 {
   "id": "com.unneland.flofjore",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
