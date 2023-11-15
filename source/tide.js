@@ -165,7 +165,7 @@ class Tide {
       }
     });
     this.polynomialData = { 'x': xArray, 'y': yArray };
-    this.homey.log("Tide levels updated");
+    this.homey.log("Tide levels updated - " + JSON.stringify(this.tideTimes));
   }
 
   updateEventData(data) {
@@ -190,7 +190,9 @@ class Tide {
     }
     this.events = events;
     this.allEvents = allEvents;
-    this.homey.log("Events updated");
+    this.allEvents.forEach((event) => {
+      this.homey.log("Tide events updated - " + event.type + " - " + event.timestamp);
+    });
   }
 
 
@@ -216,6 +218,8 @@ class Tide {
       path: '/tideapi.php?lat=' + this.latitude + '&lon=' + this.longitude + '&fromtime=' + from.toISOString() + '&totime=' + to.toISOString() + '&datatype=all&refcode=cd&place=&file=&lang=nn&interval=10&dst=0&tzone=&tide_request=locationdata',
       method: 'GET'
     };
+
+    this.homey.log('Fetching tide data from ' + JSON.stringify(options));
 
     var req = https.request(options, function(res) {
       var chunks = [];
@@ -253,6 +257,8 @@ class Tide {
       path: '/tideapi.php?lat=' + this.latitude + '&lon=' + this.longitude + '&fromtime=' + from.toISOString() + '&totime=' + to.toISOString() + '&datatype=tab&refcode=cd&place=&file=&lang=nn&interval=10&dst=0&tzone=&tide_request=locationdata',
       method: 'GET'
     };
+
+    this.homey.log('Fetching event data from ' + JSON.stringify(options));
 
     var req = https.request(options, function(res) {
       var chunks = [];
