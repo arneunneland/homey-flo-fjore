@@ -213,7 +213,7 @@ class Tide {
     var tideObj = this;
 
     var options = {
-      host: 'api.sehavniva.no',
+      host: 'vannstand.kartverket.no',
       port: 443,
       path: '/tideapi.php?lat=' + this.latitude + '&lon=' + this.longitude + '&fromtime=' + from.toISOString() + '&totime=' + to.toISOString() + '&datatype=all&refcode=cd&place=&file=&lang=nn&interval=10&dst=0&tzone=&tide_request=locationdata',
       method: 'GET'
