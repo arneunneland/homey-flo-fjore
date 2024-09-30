@@ -31,5 +31,8 @@
   },
   "0.9.10": {
     "en": "Better logging when tide is updated"
+  },
+  "0.9.11": {
+    "en": "Changed URL to API at Kartverket"
   }
 }
