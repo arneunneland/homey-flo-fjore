@@ -70,6 +70,13 @@ class Tide {
       var currentTideLevel = tideLevels[0];
       var tideChangeNextHour = tideLevels[1] - currentTideLevel;
       var tideChangeNext10Min = tideLevels[2] - currentTideLevel;
+      
+      // Validate calculated tide level
+      if (!this.isValidTideLevel(currentTideLevel)) {
+        this.homey.log('Calculated tide level is invalid: ' + currentTideLevel + ', skipping update');
+        return;
+      }
+      
       var formattedHours = nextTide.timestamp.toLocaleTimeString("nb", {timeZone: 'Europe/Oslo', hour: '2-digit', minute:'2-digit'});
 
       callback({ 'tideChangeNextHour': parseFloat(tideChangeNextHour.toFixed(2)),
@@ -148,6 +155,14 @@ class Tide {
     var resultArray = new Array();
 
     for (const [key, value] of Object.entries(data)) {
+      const tideLevelValue = parseFloat(value);
+      
+      // Validate tide level data
+      if (!this.isValidTideLevel(tideLevelValue)) {
+        this.homey.log('Invalid tide level detected: ' + value + ' at ' + key + '. Skipping data update.');
+        return;
+      }
+      
       resultArray.push({ 'timestamp': new Date(key),
                           'tideLevel': value });
       this.latestTime = new Date(key);
@@ -160,12 +175,34 @@ class Tide {
     var yArray = new Array();
     this.tideTimes.time.forEach((tideTime) => {
       if (tideTime.timestamp.getTime() > fromMinute.getTime()) {
-        xArray.push(tideTime.timestamp.getTime());
-        yArray.push(parseFloat(tideTime.tideLevel));
+        const tideLevelValue = parseFloat(tideTime.tideLevel);
+        
+        // Double-check validity before adding to polynomial data
+        if (this.isValidTideLevel(tideLevelValue)) {
+          xArray.push(tideTime.timestamp.getTime());
+          yArray.push(tideLevelValue);
+        }
       }
     });
     this.polynomialData = { 'x': xArray, 'y': yArray };
     this.homey.log("Tide levels updated - " + JSON.stringify(this.tideTimes));
+  }
+
+  isValidTideLevel(value) {
+    // Check if value is a valid number
+    if (isNaN(value) || !isFinite(value)) {
+      this.homey.log('Tide level is not a valid number: ' + value);
+      return false;
+    }
+    
+    // Check if value is within reasonable bounds (-20 to +20 meters)
+    // Most tide levels are within -5 to +5 meters, but using wider range for safety
+    if (value < -20 || value > 20) {
+      this.homey.log('Tide level outside reasonable range: ' + value + ' meters');
+      return false;
+    }
+    
+    return true;
   }
 
   updateEventData(data) {
@@ -173,6 +210,14 @@ class Tide {
     var allEvents = new Set();
 
     for (const [key, value] of Object.entries(data)) {
+      const tideLevelValue = parseFloat(value.tideLevel);
+      
+      // Validate tide level in event data
+      if (!this.isValidTideLevel(tideLevelValue)) {
+        this.homey.log('Invalid tide level in event: ' + value.tideLevel + ' at ' + key + '. Skipping event.');
+        continue;
+      }
+      
       if (value.flag == 'high') {
         allEvents.add({ type: 'highest', timestamp: new Date(key)});
 
