@@ -55,7 +55,8 @@ class Tide {
                     'tideChangeNext10Min': null,
                     'tideLevel': null,
                     'tideNextType': "Ingen data",
-                    'tideNextTime': ""});
+                    'tideNextTime': "",
+                    'tideNextLevel': null});
       return;
     }
     if (!this.polynomialData) {
@@ -64,19 +65,21 @@ class Tide {
     }
 
     try {
-      var tideLevels = polynomial([today.getTime(), today.getTime() + (60*60000), today.getTime() + (10*60000)], 
+      var tideLevels = polynomial([today.getTime(), today.getTime() + (60*60000), today.getTime() + (10*60000), nextTide.timestamp.getTime()], 
       this.polynomialData.x, this.polynomialData.y);
 
       var currentTideLevel = tideLevels[0];
       var tideChangeNextHour = tideLevels[1] - currentTideLevel;
       var tideChangeNext10Min = tideLevels[2] - currentTideLevel;
+      var nextTideLevel = tideLevels[3];
       var formattedHours = nextTide.timestamp.toLocaleTimeString("nb", {timeZone: 'Europe/Oslo', hour: '2-digit', minute:'2-digit'});
 
       callback({ 'tideChangeNextHour': parseFloat(tideChangeNextHour.toFixed(2)),
         'tideChangeNext10Min': parseFloat(tideChangeNext10Min.toFixed(2)),
         'tideLevel': parseFloat(currentTideLevel.toFixed(2)),
         'tideNextType': nextTide.type,
-        'tideNextTime': formattedHours});
+        'tideNextTime': formattedHours,
+        'tideNextLevel': parseFloat(nextTideLevel.toFixed(2))});
       
     } catch (error) {
       this.homey.log('Error processing tide data: ' + error);

@@ -37,6 +37,7 @@ class MyDevice extends Device {
         this.setCapabilityValue('tideChangeShort', currentValues.tideChangeNext10Min).catch(this.error);
         this.setCapabilityValue('tideNextType', currentValues.tideNextType).catch(this.error);
         this.setCapabilityValue('tideNextTime', currentValues.tideNextTime).catch(this.error);
+        this.setCapabilityValue('tideNextLevel', currentValues.tideNextLevel).catch(this.error);
       });
     }, 5000);
 

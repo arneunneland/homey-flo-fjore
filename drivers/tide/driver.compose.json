@@ -4,7 +4,7 @@
     "no": "Flo og fjære"
   },
   "class": "other",
-  "capabilities": ["tideLevel", "tideChangeShort", "tideChangeLong", "tideNextType", "tideNextTime"],
+  "capabilities": ["tideLevel", "tideChangeShort", "tideChangeLong", "tideNextType", "tideNextTime", "tideNextLevel"],
   "capabilitiesOptions": {
     "tideLevel": { "decimals": 1, "units": "cm" },
     "tideChangeShort": { "decimals": 2, "units": "cm" },
