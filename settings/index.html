@@ -30,7 +30,7 @@
         
         var logElement = document.getElementById("log");
 
-        Homey.api("GET", "/log", { foo: "bar" }, function (err, result) {
+        Homey.api("GET", "/log", null, function (err, result) {
             if (err) return Homey.alert(err);
             logElement.value = result;
         });

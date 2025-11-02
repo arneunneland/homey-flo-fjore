@@ -12,10 +12,10 @@ class MyApp extends Homey.App {
   async onInit() {
     this.logger = async (data) => {
       this.homey.log(data);
-      if (this.homey.app.logEntries.length > 200) {
-        this.homey.app.logEntries.shift();
+      if (this.logEntries.length > 200) {
+        this.logEntries.shift();
       }
-      this.homey.app.logEntries.push(`${new Date().toISOString()}: ${data}`);
+      this.logEntries.push(`${new Date().toISOString()}: ${data}`);
     };
 
     this.log('Flo og fjære has been initialized');
