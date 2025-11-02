@@ -37,10 +37,10 @@ class Tide {
     this.allEvents.forEach((event) => {
       if (!nextTide && event.timestamp > today) {
         if (event.type == 'highest') {
-          nextTide = { timestamp: event.timestamp, type: "Flo" };
+          nextTide = { timestamp: event.timestamp, type: "Flo", tideLevel: event.tideLevel };
         }
         if (event.type == 'lowest') {
-          nextTide = { timestamp: event.timestamp, type: "Fjære" };
+          nextTide = { timestamp: event.timestamp, type: "Fjære", tideLevel: event.tideLevel };
         }
       }
     });
@@ -55,7 +55,8 @@ class Tide {
                     'tideChangeNext10Min': null,
                     'tideLevel': null,
                     'tideNextType': "Ingen data",
-                    'tideNextTime': ""});
+                    'tideNextTime': "",
+                    'tideNextLevel': null});
       return;
     }
     if (!this.polynomialData) {
@@ -76,7 +77,8 @@ class Tide {
         'tideChangeNext10Min': parseFloat(tideChangeNext10Min.toFixed(2)),
         'tideLevel': parseFloat(currentTideLevel.toFixed(2)),
         'tideNextType': nextTide.type,
-        'tideNextTime': formattedHours});
+        'tideNextTime': formattedHours,
+        'tideNextLevel': nextTide.tideLevel ? parseFloat(nextTide.tideLevel) : null});
       
     } catch (error) {
       this.homey.log('Error processing tide data: ' + error);
@@ -174,14 +176,14 @@ class Tide {
 
     for (const [key, value] of Object.entries(data)) {
       if (value.flag == 'high') {
-        allEvents.add({ type: 'highest', timestamp: new Date(key)});
+        allEvents.add({ type: 'highest', timestamp: new Date(key), tideLevel: value.tideLevel });
 
         if (new Date(key) > Date.now()) {
           events.add({ processed: false, dueDate: new Date(key), type: 'highest', tideLevel: value.tideLevel });
         }
       }
       if (value.flag == 'low') {
-        allEvents.add({ type: 'lowest', timestamp: new Date(key)});
+        allEvents.add({ type: 'lowest', timestamp: new Date(key), tideLevel: value.tideLevel });
 
         if (new Date(key) > Date.now()) {
           events.add({ processed: false, dueDate: new Date(key), type: 'lowest', tideLevel: value.tideLevel });

@@ -26,6 +26,15 @@ class MyDevice extends Device {
     }
 
     this.tide = new Tide(this.homey, this.latitude, this.longitude); 
+    
+    // Add capability to existing devices if not present
+    if (!this.hasCapability('tideNextLevel')) {
+      await this.addCapability('tideNextLevel').catch(this.error);
+    }
+    
+    // Initialize tideNextLevel to null to clear old values on app start
+    await this.setCapabilityValue('tideNextLevel', null).catch(this.error);
+    
     await this.tide.updateSealevel();
 
     this.updateInterval = this.homey.setInterval(async () => {
@@ -37,13 +46,14 @@ class MyDevice extends Device {
 
       this.tide.processCurrentTide((currentValues) => {
         if (currentValues.tideLevel !== null) {
-          this.logger(`Updating capabilities - Level: ${currentValues.tideLevel}, Next: ${currentValues.tideNextType} at ${currentValues.tideNextTime}`);
+          this.logger(`Updating capabilities - Level: ${currentValues.tideLevel}, Next: ${currentValues.tideNextType} at ${currentValues.tideNextTime}, Next Level: ${currentValues.tideNextLevel}`);
         }
         this.setCapabilityValue('tideLevel', currentValues.tideLevel).catch(this.error);
         this.setCapabilityValue('tideChangeLong', currentValues.tideChangeNextHour).catch(this.error);
         this.setCapabilityValue('tideChangeShort', currentValues.tideChangeNext10Min).catch(this.error);
         this.setCapabilityValue('tideNextType', currentValues.tideNextType).catch(this.error);
         this.setCapabilityValue('tideNextTime', currentValues.tideNextTime).catch(this.error);
+        this.setCapabilityValue('tideNextLevel', currentValues.tideNextLevel).catch(this.error);
       });
     }, 5000);
 

@@ -139,7 +139,8 @@
         "tideChangeShort",
         "tideChangeLong",
         "tideNextType",
-        "tideNextTime"
+        "tideNextTime",
+        "tideNextLevel"
       ],
       "capabilitiesOptions": {
         "tideLevel": {
@@ -245,6 +246,18 @@
       "title": {
         "en": "Tide level",
         "no": "Vannstand"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "icon": "/assets/icon.svg"
+    },
+    "tideNextLevel": {
+      "type": "number",
+      "title": {
+        "en": "Next tide level",
+        "no": "Neste tidsnivå"
       },
       "getable": true,
       "setable": false,
