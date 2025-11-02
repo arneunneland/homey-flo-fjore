@@ -9,6 +9,10 @@ class MyDevice extends Device {
    * onInit is called when the device is initialized.
    */
   async onInit() {
+    this.logger = async (data) => {
+      this.homey.app.logger(`${this.getName()}: ${data}`);
+    };
+
     const settings = this.getSettings();
     if (settings.latitude) {
       this.latitude = parseFloat(settings.latitude);
@@ -74,15 +78,14 @@ class MyDevice extends Device {
       await tideLowestTrigger.trigger(this);
     });
 
-    this.log('MyDevice has been initialized');
+    this.logger('Device has been initialized');
   }
 
   /**
    * onAdded is called when the user adds the device, called just after pairing.
    */
   async onAdded() {
-    
-    this.log('MyDevice has been added');
+    this.logger('Device has been added');
   }
 
   /**
@@ -114,7 +117,7 @@ class MyDevice extends Device {
    * @param {string} name The new name
    */
   async onRenamed(name) {
-    this.log('MyDevice was renamed');
+    this.logger('Device was renamed');
   }
 
   /**
@@ -123,7 +126,7 @@ class MyDevice extends Device {
   async onDeleted() {
     this.homey.clearInterval(this.updateInterval);
     this.homey.clearInterval(this.checkInterval);
-    this.log('MyDevice has been deleted');
+    this.logger('Device has been deleted');
   }
 
 }
