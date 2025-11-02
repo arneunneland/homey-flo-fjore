@@ -165,7 +165,7 @@ class Tide {
       }
     });
     this.polynomialData = { 'x': xArray, 'y': yArray };
-    this.homey.log("Tide levels updated - " + JSON.stringify(this.tideTimes));
+    this.homey.log(`Tide levels updated - ${resultArray.length} data points saved`);
   }
 
   updateEventData(data) {
@@ -190,9 +190,7 @@ class Tide {
     }
     this.events = events;
     this.allEvents = allEvents;
-    this.allEvents.forEach((event) => {
-      this.homey.log("Tide events updated - " + event.type + " - " + event.timestamp);
-    });
+    this.homey.log(`Tide events updated - ${allEvents.size} events saved`);
   }
 
 
@@ -219,7 +217,7 @@ class Tide {
       method: 'GET'
     };
 
-    this.homey.log('Fetching tide data from ' + JSON.stringify(options));
+    this.homey.log('Requesting tide data update');
 
     var req = https.request(options, function(res) {
       var chunks = [];
@@ -238,13 +236,13 @@ class Tide {
           }, {});
           tideObj.updateTideData(hashMap);
         } catch (error) {
-          console.log('problem with xml-tide: ' + error);
+          tideObj.homey.log('Error parsing tide data: ' + error);
         }
       });
     });
     
     req.on('error', function(e) {
-      console.log('problem with request: ' + e.message);
+      tideObj.homey.log('Error fetching tide data: ' + e.message);
     });
     req.end();
   }
@@ -258,7 +256,7 @@ class Tide {
       method: 'GET'
     };
 
-    this.homey.log('Fetching event data from ' + JSON.stringify(options));
+    this.homey.log('Requesting tide events update');
 
     var req = https.request(options, function(res) {
       var chunks = [];
@@ -277,13 +275,13 @@ class Tide {
           }, {});
           tideObj.updateEventData(hashMap);
         } catch (error) {
-          console.log('problem with xml-event: ' + error);
+          tideObj.homey.log('Error parsing tide events: ' + error);
         }
       });
     });
     
     req.on('error', function(e) {
-      console.log('problem with request: ' + e.message);
+      tideObj.homey.log('Error fetching tide events: ' + e.message);
     });
     req.end();
   }

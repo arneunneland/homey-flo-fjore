@@ -36,6 +36,9 @@ class MyDevice extends Device {
       this.tide.checkForEvents();
 
       this.tide.processCurrentTide((currentValues) => {
+        if (currentValues.tideLevel !== null) {
+          this.logger(`Updating capabilities - Level: ${currentValues.tideLevel}, Next: ${currentValues.tideNextType} at ${currentValues.tideNextTime}`);
+        }
         this.setCapabilityValue('tideLevel', currentValues.tideLevel).catch(this.error);
         this.setCapabilityValue('tideChangeLong', currentValues.tideChangeNextHour).catch(this.error);
         this.setCapabilityValue('tideChangeShort', currentValues.tideChangeNext10Min).catch(this.error);
