@@ -9,6 +9,11 @@ class MyDevice extends Device {
    * onInit is called when the device is initialized.
    */
   async onInit() {
+    // Add new capability if it doesn't exist (for existing devices)
+    if (!this.hasCapability('tideNextLevel')) {
+      await this.addCapability('tideNextLevel');
+    }
+
     const settings = this.getSettings();
     if (settings.latitude) {
       this.latitude = parseFloat(settings.latitude);
