@@ -18,6 +18,12 @@
   "category": [
     "climate"
   ],
+  "api": {
+    "log": {
+      "method": "GET",
+      "path": "/log"
+    }
+  },
   "permissions": [
     "homey:manager:geolocation"
   ],
