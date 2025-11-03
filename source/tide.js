@@ -17,6 +17,20 @@ class Tide {
     this.homey = homey;
     this.latitude = latitude;
     this.longitude = longitude;
+    this.logger = null;
+    this.updatesToNextLog = 0;
+  }
+
+  setLogger(logger) {
+    this.logger = logger;
+  }
+
+  log(message) {
+    if (this.logger) {
+      this.logger(message);
+    } else {
+      this.homey.log(message);
+    }
   }
 
   updatePosition(latitude, longitude) { 
@@ -31,7 +45,7 @@ class Tide {
     var nextTide = null;
 
     if (!this.allEvents) {
-      this.homey.log('No tide event data available, skipping');
+      this.log('No tide event data available, skipping');
       return;
     }
     this.allEvents.forEach((event) => {
@@ -45,13 +59,13 @@ class Tide {
       }
     });
     if (!nextTide) {
-      this.homey.log('No tide data available, skipping');
+      this.log('No tide data available, skipping');
       return;
     }
 
     if (this.latestTime && this.latestTime < (today.getTime() + (60*60000))) {
-      this.homey.log('Tide data is not up to date, skipping');
-      callback({ 'tideChangeNextHour': null,
+      this.log('Tide data is not up to date, skipping');
+            callback({ 'tideChangeNextHour': null,
                     'tideChangeNext10Min': null,
                     'tideLevel': null,
                     'tideNextType': "Ingen data",
@@ -59,7 +73,7 @@ class Tide {
       return;
     }
     if (!this.polynomialData) {
-      this.homey.log('No polynomial data available, skipping');
+      this.log('No polynomial data available, skipping');
       return;
     }
 
@@ -72,6 +86,14 @@ class Tide {
       var tideChangeNext10Min = tideLevels[2] - currentTideLevel;
       var formattedHours = nextTide.timestamp.toLocaleTimeString("nb", {timeZone: 'Europe/Oslo', hour: '2-digit', minute:'2-digit'});
 
+      // Log capabilities periodically (every 10 minutes) or after data refresh
+      if (this.updatesToNextLog <= 0) {
+        this.log(`Capabilities updated - Level: ${currentTideLevel.toFixed(1)} cm, Next: ${nextTide.type} at ${formattedHours}`);
+        this.updatesToNextLog = 120; // Log every 10 minutes (120 * 5 seconds = 600 seconds)
+      } else {
+        this.updatesToNextLog--;
+      }
+
       callback({ 'tideChangeNextHour': parseFloat(tideChangeNextHour.toFixed(2)),
         'tideChangeNext10Min': parseFloat(tideChangeNext10Min.toFixed(2)),
         'tideLevel': parseFloat(currentTideLevel.toFixed(2)),
@@ -79,7 +101,7 @@ class Tide {
         'tideNextTime': formattedHours});
       
     } catch (error) {
-      this.homey.log('Error processing tide data: ' + error);
+      this.log('Error processing tide data: ' + error);
     }
   }
 
@@ -165,7 +187,8 @@ class Tide {
       }
     });
     this.polynomialData = { 'x': xArray, 'y': yArray };
-    this.homey.log(`Tide levels updated - ${resultArray.length} data points saved`);
+    this.updatesToNextLog = 0;
+    this.log(`Tide levels updated - ${resultArray.length} data points saved`);
   }
 
   updateEventData(data) {
@@ -190,7 +213,8 @@ class Tide {
     }
     this.events = events;
     this.allEvents = allEvents;
-    this.homey.log(`Tide events updated - ${allEvents.size} events saved`);
+    this.updatesToNextLog = 0;
+    this.log(`Tide events updated - ${allEvents.size} events saved`);
   }
 
 
@@ -217,7 +241,7 @@ class Tide {
       method: 'GET'
     };
 
-    this.homey.log('Requesting tide data update');
+    this.log('Requesting tide data from API');
 
     var req = https.request(options, function(res) {
       var chunks = [];
@@ -235,14 +259,15 @@ class Tide {
             return { ...result, [ item.getAttribute("time") ] : item.getAttribute("value") };
           }, {});
           tideObj.updateTideData(hashMap);
+          tideObj.log(`Received tide data - ${Object.keys(hashMap).length} data points`);
         } catch (error) {
-          tideObj.homey.log('Error parsing tide data: ' + error);
+          tideObj.log('Error parsing tide data: ' + error);
         }
       });
     });
     
     req.on('error', function(e) {
-      tideObj.homey.log('Error fetching tide data: ' + e.message);
+      tideObj.log('Error fetching tide data: ' + e.message);
     });
     req.end();
   }
@@ -256,7 +281,7 @@ class Tide {
       method: 'GET'
     };
 
-    this.homey.log('Requesting tide events update');
+    this.log('Requesting tide events from API');
 
     var req = https.request(options, function(res) {
       var chunks = [];
@@ -274,14 +299,15 @@ class Tide {
             return { ...result, [ item.getAttribute("time") ] : { "tideLevel": item.getAttribute("value"), "flag": item.getAttribute("flag") } };
           }, {});
           tideObj.updateEventData(hashMap);
+          tideObj.log(`Received tide events - ${tideObj.allEvents ? tideObj.allEvents.size : 0} events`);
         } catch (error) {
-          tideObj.homey.log('Error parsing tide events: ' + error);
+          tideObj.log('Error parsing tide events: ' + error);
         }
       });
     });
     
     req.on('error', function(e) {
-      tideObj.homey.log('Error fetching tide events: ' + e.message);
+      tideObj.log('Error fetching tide events: ' + e.message);
     });
     req.end();
   }

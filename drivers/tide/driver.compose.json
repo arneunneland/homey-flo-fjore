@@ -8,8 +8,7 @@
   "capabilitiesOptions": {
     "tideLevel": { "decimals": 1, "units": "cm" },
     "tideChangeShort": { "decimals": 2, "units": "cm" },
-    "tideChangeLong": { "decimals": 2, "units": "cm" },
-    "tideNextLevel": { "decimals": 2, "units": "cm" }
+    "tideChangeLong": { "decimals": 2, "units": "cm" }
   },
   "platforms": [
     "local"

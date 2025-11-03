@@ -26,6 +26,7 @@ class MyDevice extends Device {
     }
 
     this.tide = new Tide(this.homey, this.latitude, this.longitude); 
+    this.tide.setLogger(this.logger);
     await this.tide.updateSealevel();
 
     this.updateInterval = this.homey.setInterval(async () => {
@@ -36,9 +37,6 @@ class MyDevice extends Device {
       this.tide.checkForEvents();
 
       this.tide.processCurrentTide((currentValues) => {
-        if (currentValues.tideLevel !== null) {
-          this.logger(`Updating capabilities - Level: ${currentValues.tideLevel}, Next: ${currentValues.tideNextType} at ${currentValues.tideNextTime}`);
-        }
         this.setCapabilityValue('tideLevel', currentValues.tideLevel).catch(this.error);
         this.setCapabilityValue('tideChangeLong', currentValues.tideChangeNextHour).catch(this.error);
         this.setCapabilityValue('tideChangeShort', currentValues.tideChangeNext10Min).catch(this.error);
