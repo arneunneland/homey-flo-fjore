@@ -233,25 +233,23 @@ class Tide {
   getNextHighTide() {
     if (!this.allEvents) return null;
     var now = new Date();
-    var result = null;
-    this.allEvents.forEach((event) => {
-      if (!result && event.timestamp > now && event.type === 'highest') {
-        result = event;
+    for (const event of this.allEvents) {
+      if (event.timestamp > now && event.type === 'highest') {
+        return event;
       }
-    });
-    return result;
+    }
+    return null;
   }
 
   getNextLowTide() {
     if (!this.allEvents) return null;
     var now = new Date();
-    var result = null;
-    this.allEvents.forEach((event) => {
-      if (!result && event.timestamp > now && event.type === 'lowest') {
-        result = event;
+    for (const event of this.allEvents) {
+      if (event.timestamp > now && event.type === 'lowest') {
+        return event;
       }
-    });
-    return result;
+    }
+    return null;
   }
 
   getForecastEvents() {

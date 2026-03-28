@@ -102,15 +102,15 @@ class MyDevice extends Device {
       return true;
     });
 
-    // Threshold trigger cards
+    // Threshold trigger cards - only fire when level crosses the threshold
     const tideLevelAboveTrigger = this.homey.flow.getDeviceTriggerCard('whenTideLevelAbove');
     tideLevelAboveTrigger.registerRunListener(async (args, state) => {
-      return state.level >= args.level;
+      return state.previousLevel < args.level && state.currentLevel >= args.level;
     });
 
     const tideLevelBelowTrigger = this.homey.flow.getDeviceTriggerCard('whenTideLevelBelow');
     tideLevelBelowTrigger.registerRunListener(async (args, state) => {
-      return state.level <= args.level;
+      return state.previousLevel > args.level && state.currentLevel <= args.level;
     });
 
     this._tideLevelAboveTrigger = tideLevelAboveTrigger;
@@ -133,14 +133,17 @@ class MyDevice extends Device {
       return;
     }
 
-    // Only trigger when crossing a threshold, not on every update
-    if (currentLevel > this._lastLevel) {
-      // Level is rising - check "above" triggers
-      this._tideLevelAboveTrigger.trigger(this, {}, { level: currentLevel }).catch(this.error);
-    }
-    if (currentLevel < this._lastLevel) {
-      // Level is falling - check "below" triggers
-      this._tideLevelBelowTrigger.trigger(this, {}, { level: currentLevel }).catch(this.error);
+    // Only fire when the level actually crosses a threshold boundary
+    // Pass both previous and current level so the runListener can check crossing
+    if (currentLevel !== this._lastLevel) {
+      this._tideLevelAboveTrigger.trigger(this, {}, {
+        currentLevel,
+        previousLevel: this._lastLevel,
+      }).catch(this.error);
+      this._tideLevelBelowTrigger.trigger(this, {}, {
+        currentLevel,
+        previousLevel: this._lastLevel,
+      }).catch(this.error);
     }
 
     this._lastLevel = currentLevel;
