@@ -1,7 +1,6 @@
 'use strict';
 
 var https = require('https');
-const xmlJs = require('xml-js');
 var DOMParser = require("@xmldom/xmldom").DOMParser;
 var xpath = require("xpath");
 const EventEmitter = require('events');
@@ -197,14 +196,14 @@ class Tide {
 
     for (const [key, value] of Object.entries(data)) {
       if (value.flag == 'high') {
-        allEvents.add({ type: 'highest', timestamp: new Date(key)});
+        allEvents.add({ type: 'highest', timestamp: new Date(key), tideLevel: parseFloat(value.tideLevel) });
 
         if (new Date(key) > Date.now()) {
           events.add({ processed: false, dueDate: new Date(key), type: 'highest', tideLevel: value.tideLevel });
         }
       }
       if (value.flag == 'low') {
-        allEvents.add({ type: 'lowest', timestamp: new Date(key)});
+        allEvents.add({ type: 'lowest', timestamp: new Date(key), tideLevel: parseFloat(value.tideLevel) });
 
         if (new Date(key) > Date.now()) {
           events.add({ processed: false, dueDate: new Date(key), type: 'lowest', tideLevel: value.tideLevel });
@@ -215,6 +214,56 @@ class Tide {
     this.allEvents = allEvents;
     this.updatesToNextLog = 0;
     this.log(`Tide events updated - ${allEvents.size} events saved`);
+  }
+
+
+  getCurrentLevel() {
+    if (!this.polynomialData || !this.polynomialData.x.length) {
+      return null;
+    }
+    try {
+      var now = new Date();
+      var tideLevels = polynomial([now.getTime()], this.polynomialData.x, this.polynomialData.y);
+      return parseFloat(tideLevels[0].toFixed(2));
+    } catch (error) {
+      return null;
+    }
+  }
+
+  getNextHighTide() {
+    if (!this.allEvents) return null;
+    var now = new Date();
+    var result = null;
+    this.allEvents.forEach((event) => {
+      if (!result && event.timestamp > now && event.type === 'highest') {
+        result = event;
+      }
+    });
+    return result;
+  }
+
+  getNextLowTide() {
+    if (!this.allEvents) return null;
+    var now = new Date();
+    var result = null;
+    this.allEvents.forEach((event) => {
+      if (!result && event.timestamp > now && event.type === 'lowest') {
+        result = event;
+      }
+    });
+    return result;
+  }
+
+  getForecastEvents() {
+    if (!this.allEvents) return [];
+    var now = new Date();
+    var forecast = [];
+    this.allEvents.forEach((event) => {
+      if (event.timestamp > now) {
+        forecast.push(event);
+      }
+    });
+    return forecast;
   }
 
 
@@ -231,6 +280,45 @@ class Tide {
     this.fetchEvents(from, toForEvents);
   }
 
+  fetchWithRetry(options, maxRetries = 3) {
+    return new Promise((resolve, reject) => {
+      const attempt = (retryCount) => {
+        var req = https.request(options, function(res) {
+          var chunks = [];
+          res.setEncoding('utf8');
+          res.on('data', function (chunk) {
+            chunks.push(Buffer.from(chunk));
+          });
+          res.on('end', function () {
+            resolve(Buffer.concat(chunks).toString('utf8'));
+          });
+        });
+
+        req.on('error', (e) => {
+          if (retryCount < maxRetries) {
+            var delay = Math.pow(2, retryCount) * 5000; // 5s, 10s, 20s
+            setTimeout(() => attempt(retryCount + 1), delay);
+          } else {
+            reject(e);
+          }
+        });
+
+        req.setTimeout(30000, () => {
+          req.destroy();
+          if (retryCount < maxRetries) {
+            var delay = Math.pow(2, retryCount) * 5000;
+            setTimeout(() => attempt(retryCount + 1), delay);
+          } else {
+            reject(new Error('Request timed out after retries'));
+          }
+        });
+
+        req.end();
+      };
+      attempt(0);
+    });
+  }
+
   fetchTideData(from, to) {
     var tideObj = this;
 
@@ -243,33 +331,22 @@ class Tide {
 
     this.log('Requesting tide data from API');
 
-    var req = https.request(options, function(res) {
-      var chunks = [];
-      res.setEncoding('utf8');
-      res.on('data', function (chunk) {
-        chunks.push(Buffer.from(chunk));
-      });
-      res.on('end', function () {
-        try {
-          var body = Buffer.concat(chunks).toString('utf8');
-          let doc = new DOMParser().parseFromString(body);
+    this.fetchWithRetry(options).then((body) => {
+      try {
+        let doc = new DOMParser().parseFromString(body);
 
-          var nodes = xpath.select("//waterlevel[@flag='forecast']", doc);
-          const hashMap = nodes.reduce((result, item) => {
-            return { ...result, [ item.getAttribute("time") ] : item.getAttribute("value") };
-          }, {});
-          tideObj.updateTideData(hashMap);
-          tideObj.log(`Received tide data - ${Object.keys(hashMap).length} data points`);
-        } catch (error) {
-          tideObj.log('Error parsing tide data: ' + error);
-        }
-      });
+        var nodes = xpath.select("//waterlevel[@flag='forecast']", doc);
+        const hashMap = nodes.reduce((result, item) => {
+          return { ...result, [ item.getAttribute("time") ] : item.getAttribute("value") };
+        }, {});
+        tideObj.updateTideData(hashMap);
+        tideObj.log(`Received tide data - ${Object.keys(hashMap).length} data points`);
+      } catch (error) {
+        tideObj.log('Error parsing tide data: ' + error);
+      }
+    }).catch((error) => {
+      tideObj.log('Error fetching tide data after retries: ' + error.message);
     });
-    
-    req.on('error', function(e) {
-      tideObj.log('Error fetching tide data: ' + e.message);
-    });
-    req.end();
   }
 
   fetchEvents(from, to) {
@@ -283,33 +360,22 @@ class Tide {
 
     this.log('Requesting tide events from API');
 
-    var req = https.request(options, function(res) {
-      var chunks = [];
-      res.setEncoding('utf8');
-      res.on('data', function (chunk) {
-        chunks.push(Buffer.from(chunk));
-      });
-      res.on('end', function () {
-        try {
-          var body = Buffer.concat(chunks).toString('utf8');
-          let doc = new DOMParser().parseFromString(body);
+    this.fetchWithRetry(options).then((body) => {
+      try {
+        let doc = new DOMParser().parseFromString(body);
   
-          var nodes = xpath.select("//waterlevel", doc);
-          const hashMap = nodes.reduce((result, item) => {
-            return { ...result, [ item.getAttribute("time") ] : { "tideLevel": item.getAttribute("value"), "flag": item.getAttribute("flag") } };
-          }, {});
-          tideObj.updateEventData(hashMap);
-          tideObj.log(`Received tide events - ${tideObj.allEvents ? tideObj.allEvents.size : 0} events`);
-        } catch (error) {
-          tideObj.log('Error parsing tide events: ' + error);
-        }
-      });
+        var nodes = xpath.select("//waterlevel", doc);
+        const hashMap = nodes.reduce((result, item) => {
+          return { ...result, [ item.getAttribute("time") ] : { "tideLevel": item.getAttribute("value"), "flag": item.getAttribute("flag") } };
+        }, {});
+        tideObj.updateEventData(hashMap);
+        tideObj.log(`Received tide events - ${tideObj.allEvents ? tideObj.allEvents.size : 0} events`);
+      } catch (error) {
+        tideObj.log('Error parsing tide events: ' + error);
+      }
+    }).catch((error) => {
+      tideObj.log('Error fetching tide events after retries: ' + error.message);
     });
-    
-    req.on('error', function(e) {
-      tideObj.log('Error fetching tide events: ' + e.message);
-    });
-    req.end();
   }
 }
 

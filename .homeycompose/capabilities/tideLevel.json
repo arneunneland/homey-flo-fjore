@@ -5,5 +5,6 @@
     "setable": false,
     "uiComponent": "sensor",
     "uiQuickAction": false,
-    "icon": "/assets/icon.svg"
+    "icon": "/assets/icon.svg",
+    "insights": true
   }

@@ -1,1 +1,6 @@
-{}
+{
+  "settings": {
+    "longitude": "Longitude",
+    "latitude": "Latitude"
+  }
+}

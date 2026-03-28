@@ -1,10 +1,10 @@
 {
     "type": "number",
-    "title": { "en": "Change next hour", "no": "Endring neste time"},
+    "title": { "en": "Next low tide level", "no": "Neste fjære nivå" },
     "getable": true,
     "setable": false,
     "uiComponent": "sensor",
     "uiQuickAction": false,
     "icon": "/assets/icon.svg",
     "insights": true
-  }
+}

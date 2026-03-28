@@ -4,11 +4,13 @@
     "no": "Flo og fjære"
   },
   "class": "other",
-  "capabilities": ["tideLevel", "tideChangeShort", "tideChangeLong", "tideNextType", "tideNextTime"],
+  "capabilities": ["tideLevel", "tideChangeShort", "tideChangeLong", "tideNextType", "tideNextTime", "tideNextHighTime", "tideNextHighLevel", "tideNextLowTime", "tideNextLowLevel"],
   "capabilitiesOptions": {
     "tideLevel": { "decimals": 1, "units": "cm" },
     "tideChangeShort": { "decimals": 2, "units": "cm" },
-    "tideChangeLong": { "decimals": 2, "units": "cm" }
+    "tideChangeLong": { "decimals": 2, "units": "cm" },
+    "tideNextHighLevel": { "decimals": 1, "units": "cm" },
+    "tideNextLowLevel": { "decimals": 1, "units": "cm" }
   },
   "platforms": [
     "local"
