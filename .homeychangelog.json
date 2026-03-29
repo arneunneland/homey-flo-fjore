@@ -40,5 +40,8 @@
   },
   "0.9.13": {
     "en": "Added logging in admin"
+  },
+  "0.9.14": {
+    "en": "Added tide level threshold triggers, forecast timeline capabilities, Insights logging, coordinate validation, API retry logic, and removed unused dependencies"
   }
 }

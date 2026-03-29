@@ -6,14 +6,66 @@
         "en": "The tide is highest",
         "no": "Floa er høyest"
       }
-    },    {
+    },
+    {
       "id": "whenTideLowest",
       "title": {
         "en": "The tide is lowest",
         "no": "Fjæra er lavest"
       }
+    },
+    {
+      "id": "whenTideLevelAbove",
+      "title": {
+        "en": "Tide level rises above",
+        "no": "Vannstand stiger over"
+      },
+      "titleFormatted": {
+        "en": "Tide level rises above [[level]] cm",
+        "no": "Vannstand stiger over [[level]] cm"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "level",
+          "title": {
+            "en": "Level (cm)",
+            "no": "Nivå (cm)"
+          },
+          "placeholder": {
+            "en": "e.g. 150",
+            "no": "f.eks. 150"
+          }
+        }
+      ]
+    },
+    {
+      "id": "whenTideLevelBelow",
+      "title": {
+        "en": "Tide level drops below",
+        "no": "Vannstand synker under"
+      },
+      "titleFormatted": {
+        "en": "Tide level drops below [[level]] cm",
+        "no": "Vannstand synker under [[level]] cm"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "level",
+          "title": {
+            "en": "Level (cm)",
+            "no": "Nivå (cm)"
+          },
+          "placeholder": {
+            "en": "e.g. 50",
+            "no": "f.eks. 50"
+          }
+        }
+      ]
     }
-  ],"conditions": [
+  ],
+  "conditions": [
     {
       "id": "isTideHigh",
       "title": {
@@ -41,6 +93,56 @@
         "en": "The tide is falling",
         "no": "Tidevannet synker"
       }
+    },
+    {
+      "id": "isTideLevelAbove",
+      "title": {
+        "en": "Tide level is above",
+        "no": "Vannstand er over"
+      },
+      "titleFormatted": {
+        "en": "Tide level is above [[level]] cm",
+        "no": "Vannstand er over [[level]] cm"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "level",
+          "title": {
+            "en": "Level (cm)",
+            "no": "Nivå (cm)"
+          },
+          "placeholder": {
+            "en": "e.g. 150",
+            "no": "f.eks. 150"
+          }
+        }
+      ]
+    },
+    {
+      "id": "isTideLevelBelow",
+      "title": {
+        "en": "Tide level is below",
+        "no": "Vannstand er under"
+      },
+      "titleFormatted": {
+        "en": "Tide level is below [[level]] cm",
+        "no": "Vannstand er under [[level]] cm"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "level",
+          "title": {
+            "en": "Level (cm)",
+            "no": "Nivå (cm)"
+          },
+          "placeholder": {
+            "en": "e.g. 50",
+            "no": "f.eks. 50"
+          }
+        }
+      ]
     }
   ]
 }

@@ -2,15 +2,15 @@
     {
         "id": "longitude",
         "type": "text",
-        "label": { "en": "Longitude" },
+        "label": { "en": "Longitude", "no": "Lengdegrad" },
         "value": "",
-        "hint": { "en": "Longitude of the position" }
+        "hint": { "en": "Longitude of the position", "no": "Lengdegrad for posisjonen" }
     },
     {
         "id": "latitude",
         "type": "text",
-        "label": { "en": "Latitude" },
+        "label": { "en": "Latitude", "no": "Breddegrad" },
         "value": "",
-        "hint": { "en": "Longitude of the position" }
+        "hint": { "en": "Latitude of the position", "no": "Breddegrad for posisjonen" }
     }
 ]

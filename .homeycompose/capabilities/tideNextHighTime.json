@@ -1,10 +1,10 @@
 {
-    "type": "number",
-    "title": { "en": "Change next hour", "no": "Endring neste time"},
+    "type": "string",
+    "title": { "en": "Next high tide", "no": "Neste flo" },
     "getable": true,
     "setable": false,
     "uiComponent": "sensor",
     "uiQuickAction": false,
     "icon": "/assets/icon.svg",
-    "insights": true
-  }
+    "insights": false
+}

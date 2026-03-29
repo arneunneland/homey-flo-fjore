@@ -1,6 +1,6 @@
 {
   "name": "com.unneland.flofjore",
-  "version": "1.0.0",
+  "version": "0.9.14",
   "main": "app.js",
   "scripts": {
     "lint": "eslint --ext .js,.ts --ignore-path .gitignore ."
@@ -15,8 +15,6 @@
   "dependencies": {
     "@xmldom/xmldom": "^0.8.10",
     "everpolate": "^0.0.3",
-    "gitignore": "^0.7.0",
-    "xml-js": "^1.6.11",
     "xpath": "^0.0.33"
   }
 }

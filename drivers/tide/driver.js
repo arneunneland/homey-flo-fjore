@@ -1,7 +1,6 @@
 'use strict';
 
 const { randomUUID } = require('crypto');
-//const DeviceApi = require("device-api");
 const { Driver } = require('homey');
 
 class MyDriver extends Driver {
